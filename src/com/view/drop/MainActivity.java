@@ -2,8 +2,10 @@ package com.view.drop;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 
 public class MainActivity extends Activity {
+    private LinearLayout container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

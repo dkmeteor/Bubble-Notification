@@ -44,16 +44,17 @@ public class CoverManager {
     }
 
     public void update(float x, float y) {
+        System.out.println("x:" + x + " y:" + y);
         mDropCover.update(x, y);
     }
 
     public void finish(View target, float x, float y) {
         mDropCover.finish(x, y);
 
-        if (mDropCover.getParent() != null) {
-            mWindowManager.removeView(mDropCover);
-        }
-        target.setVisibility(View.VISIBLE);
+//        if (mDropCover.getParent() != null) {
+//            mWindowManager.removeView(mDropCover);
+//        }
+//        target.setVisibility(View.VISIBLE);
     }
 
     private Bitmap drawViewToBitmap(View view) {

@@ -4,6 +4,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
+
     <com.view.drop.WaterDrop
         android:layout_width="30dp"
         android:layout_height="30dp"

@@ -5,11 +5,20 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.PorterDuff.Mode;
-import android.util.AttributeSet;
-import android.widget.ImageView;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
-public class DropCover extends ImageView {
+public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
+
+    private static final int EXPLOSION_SIZE = 200;
+
+    private MainThread thread;
+    private Explosion explosion;
+
+    private String avgFps;
+
     private float mBaseX;
     private float mBaseY;
 
@@ -17,7 +26,7 @@ public class DropCover extends ImageView {
     private float mTargetY;
 
     private Bitmap mDest;
-    private Paint mPaint;
+    private Paint mPaint = new Paint();
 
     private float targetWidth;
     private float targetHeight;
@@ -25,20 +34,31 @@ public class DropCover extends ImageView {
     private float mStrokeWidth = 25;
     private boolean isDraw = true;
     private float mStatusBarHeight = 0;
+    private OnDragCompeteListener mOnDragCompeteListener;
+
+    public interface OnDragCompeteListener {
+        void onDrag();
+    }
 
     public DropCover(Context context) {
         super(context);
-        setLayerType(LAYER_TYPE_SOFTWARE, mPaint);
-        mPaint = new Paint();
+        // adding the callback (this) to the surface holder to
+        // intercept events
+        this.setBackgroundColor(Color.TRANSPARENT); // To make canvas
+        // transparent
+        this.setZOrderOnTop(true); // To make canvas transparent
+        getHolder().setFormat(PixelFormat.TRANSPARENT); // To make canvas
+        // transparent!
+
+        getHolder().addCallback(this);
+
+        // make the GamePanel focusable so it can handle events
+        setFocusable(true);
     }
 
-    public DropCover(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+    private void drawDrop() {
+        Canvas canvas = getHolder().lockCanvas();
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
         canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);
 
         if (isDraw) {
@@ -52,7 +72,7 @@ public class DropCover extends ImageView {
             }
             canvas.drawBitmap(mDest, mTargetX, mTargetY, mPaint);
         }
-
+        getHolder().unlockCanvasAndPost(canvas);
     }
 
     public void setTarget(Bitmap dest) {
@@ -62,20 +82,19 @@ public class DropCover extends ImageView {
     }
 
     public void init(float x, float y) {
-        mBaseX = x+mDest.getWidth()/2;
-        mBaseY = y-mStatusBarHeight-mDest.getHeight()/2;
+        mBaseX = x + mDest.getWidth() / 2;
+        mBaseY = y - mDest.getWidth() / 2;
         mTargetX = x;
         mTargetY = y;
 
         isDraw = true;
-        invalidate();
     }
 
     public void update(float x, float y) {
 
         mTargetX = x;
         mTargetY = y - mStatusBarHeight;
-        invalidate();
+        drawDrop();
     }
 
     public void clear() {
@@ -87,11 +106,123 @@ public class DropCover extends ImageView {
     }
 
     public void finish(float x, float y) {
+        double distance = Math.sqrt(Math.pow(mBaseX - mTargetX, 2) + Math.pow(mBaseY - mTargetY, 2));
+        if (distance > 200 && mOnDragCompeteListener != null) {
+            mOnDragCompeteListener.onDrag();
+        }
+
+
         clear();
+        Canvas canvas = getHolder().lockCanvas();
+        canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);
+        getHolder().unlockCanvasAndPost(canvas);
+        
+
+        initExplosion(x, y);
+
+        thread = new MainThread(getHolder(), this);
+        thread.setRunning(true);
+        thread.start();
+
         isDraw = false;
     }
 
     public void setStatusBarHeight(int statusBarHeight) {
         mStatusBarHeight = statusBarHeight;
+    }
+
+    public void setOnDragCompeteListener(OnDragCompeteListener onDragCompeteListener) {
+        mOnDragCompeteListener = onDragCompeteListener;
+    }
+
+    public void setAvgFps(String avgFps) {
+        this.avgFps = avgFps;
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        // create the game loop thread
+
+        // at this point the surface is created and
+        // we can safely start the game loop
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        // tell the thread to shut down and wait for it to finish
+        // this is a clean shutdown
+        boolean retry = true;
+        while (retry) {
+            try {
+                thread.setRunning(false);
+                thread.join();
+                retry = false;
+            } catch (InterruptedException e) {
+                // try again shutting down the thread
+            }
+        }
+    }
+
+    // @Override
+    // public boolean onTouchEvent(MotionEvent event) {
+    // if (event.getAction() == MotionEvent.ACTION_DOWN) {
+    // if (explosion == null || explosion.getState() == Explosion.STATE_DEAD) {
+    // explosion = new Explosion(EXPLOSION_SIZE, (int) event.getX(), (int)
+    // event.getY());
+    // }
+    // }
+    // return true;
+    // }
+
+    public void initExplosion(float x, float y) {
+        if (explosion == null || explosion.getState() == Explosion.STATE_DEAD) {
+            explosion = new Explosion(EXPLOSION_SIZE, (int) x, (int) y);
+        }
+    }
+
+    public void render(Canvas canvas) {
+        canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);
+        canvas.drawColor(Color.argb(0, 0, 0, 0)); // To make canvas transparent
+        // render explosions
+        if (explosion != null) {
+            explosion.draw(canvas);
+        }
+
+        // display fps
+        // displayFps(canvas, avgFps);
+
+        // display border
+        /*
+         * Paint paint = new Paint(); paint.setColor(Color.GREEN);
+         * canvas.drawLines(new float[]{ 0,0, canvas.getWidth()-1,0,
+         * canvas.getWidth()-1,0, canvas.getWidth()-1,canvas.getHeight()-1,
+         * canvas.getWidth()-1,canvas.getHeight()-1, 0,canvas.getHeight()-1,
+         * 0,canvas.getHeight()-1, 0,0 }, paint);
+         */
+    }
+
+    /**
+     * This is the game update method. It iterates through all the objects and
+     * calls their update method if they have one or calls specific engine's
+     * update method.
+     */
+    public void update() {
+        // update explosions
+        if (explosion != null && explosion.isAlive()) {
+            explosion.update(getHolder().getSurfaceFrame());
+        }
+    }
+
+    private void displayFps(Canvas canvas, String fps) {
+        if (canvas != null && fps != null) {
+            Paint paint = new Paint();
+            paint.setARGB(255, 255, 255, 255);
+            canvas.drawText(fps, this.getWidth() - 50, 20, paint);
+        }
     }
 }

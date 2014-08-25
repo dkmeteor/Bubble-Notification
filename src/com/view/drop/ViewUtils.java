@@ -1,5 +1,7 @@
 package com.view.drop;
 
+import java.lang.reflect.Field;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -111,9 +113,22 @@ public class ViewUtils {
         }
     }
 
-    public static int getStatusBarHeight(Activity context) {
-        Rect rect = new Rect();
-        context.getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
-        return rect.top;
+    public static int getStatusBarHeight(Activity activity) {
+        Class<?> c = null;
+        Object obj = null;
+        Field field = null;
+        int x = 0, sbar = 38;// 默认为38，貌似大部分是这样的
+
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
+            obj = c.newInstance();
+            field = c.getField("status_bar_height");
+            x = Integer.parseInt(field.get(obj).toString());
+            sbar = activity.getResources().getDimensionPixelSize(x);
+
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return sbar;
     }
 }
