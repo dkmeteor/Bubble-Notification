@@ -3,7 +3,7 @@
 ![Examples list](http://dk-exp.com/wp-content/uploads/2014/08/WaterDrop.gif)
 
 
-Effect like QQ 5.0.
+Effect like QQ 5.0 and add an explosion animation.
 
 # How to use
 
@@ -26,9 +26,9 @@ Effect like QQ 5.0.
 
 
 # TODO
-The line is not smooth , I'd refine it soon.
-Support several different styles.
+1.The line is not smooth , I'd refine it soon.
 
+2.Support several different styles.
 
 
 ## License
