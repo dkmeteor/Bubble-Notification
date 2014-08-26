@@ -1,5 +1,7 @@
 package com.view.drop;
 
+import java.lang.reflect.Field;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -18,6 +20,10 @@ public class CoverManager {
 
     }
 
+    public WindowManager getWindowManager() {
+        return mWindowManager;
+    }
+
     public static CoverManager getInstance() {
         if (mCoverManager == null) {
             mCoverManager = new CoverManager();
@@ -29,17 +35,22 @@ public class CoverManager {
         if (mDropCover == null) {
             mDropCover = new DropCover(activity);
         }
-        mDropCover.setStatusBarHeight(ViewUtils.getStatusBarHeight(activity));
+        mDropCover.setStatusBarHeight(getStatusBarHeight(activity));
     }
 
-    public void start(View target, float x, float y) {
+    public void start(View target, float x, float y, DropCover.OnDragCompeteListener onDragCompeteListener) {
+        if (mDropCover != null && mDropCover.getParent() != null) {
+            return;
+        } else {
+            mDropCover.setOnDragCompeteListener(onDragCompeteListener);
+        }
+
         mDest = drawViewToBitmap(target);
         target.setVisibility(View.INVISIBLE);
         mDropCover.setTarget(mDest);
         int[] locations = new int[2];
         target.getLocationOnScreen(locations);
         mDropCover.init(locations[0], locations[1]);
-
         attachToWindow(target.getContext());
     }
 
@@ -49,12 +60,9 @@ public class CoverManager {
     }
 
     public void finish(View target, float x, float y) {
-        mDropCover.finish(x, y);
+        mDropCover.finish(target, x, y);
+        mDropCover.setOnDragListener(null);
 
-//        if (mDropCover.getParent() != null) {
-//            mWindowManager.removeView(mDropCover);
-//        }
-//        target.setVisibility(View.VISIBLE);
     }
 
     private Bitmap drawViewToBitmap(View view) {
@@ -82,6 +90,52 @@ public class CoverManager {
         params.height = WindowManager.LayoutParams.MATCH_PARENT;
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
         params.format = PixelFormat.RGBA_8888;
+        params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
         mWindowManager.addView(mDropCover, params);
+    }
+
+    public boolean isRunning() {
+        if (mDropCover == null) {
+            return false;
+        } else if (mDropCover.getParent() == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * please call it before animation start
+     * 
+     * Notice: the unit is frame.
+     * @param maxDistance
+     */
+    public void setExplosionTime(int lifeTime) {
+        Particle.setLifeTime(lifeTime);
+    }
+
+    public void setMaxDragDistance(int maxDistance) {
+        if (mDropCover != null) {
+            mDropCover.setMaxDragDistance(maxDistance);
+        }
+    }
+    
+    public static int getStatusBarHeight(Activity activity) {
+        Class<?> c = null;
+        Object obj = null;
+        Field field = null;
+        int x = 0, sbar = 38;// 默认为38，貌似大部分是这样的
+
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
+            obj = c.newInstance();
+            field = c.getField("status_bar_height");
+            x = Integer.parseInt(field.get(obj).toString());
+            sbar = activity.getResources().getDimensionPixelSize(x);
+
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return sbar;
     }
 }

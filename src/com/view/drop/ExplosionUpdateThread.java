@@ -3,12 +3,18 @@ package com.view.drop;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
-public class MainThread extends Thread {
+/**
+ * The thead will finish when you called setRunning(false) or Explosion ended.
+ * 
+ * @author Peter.Ding
+ * 
+ */
+public class ExplosionUpdateThread extends Thread {
     private SurfaceHolder mHolder;
     private DropCover mDropCover;
     private boolean isRunning = false;
 
-    public MainThread(SurfaceHolder holder, DropCover dropCover) {
+    public ExplosionUpdateThread(SurfaceHolder holder, DropCover dropCover) {
         mHolder = holder;
         mDropCover = dropCover;
     }
@@ -19,13 +25,16 @@ public class MainThread extends Thread {
 
     @Override
     public void run() {
-        while (true) {
+        boolean isAlive = true;
+        while (isRunning && isAlive) {
             Canvas canvas = mHolder.lockCanvas();
             if (canvas != null) {
-                mDropCover.render(canvas);
+                isAlive = mDropCover.render(canvas);
                 mHolder.unlockCanvasAndPost(canvas);
                 mDropCover.update();
             }
         }
+
+        mDropCover.clearViews();
     }
 }
