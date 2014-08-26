@@ -50,8 +50,8 @@ public class CoverManager {
         mDropCover.setTarget(mDest);
         int[] locations = new int[2];
         target.getLocationOnScreen(locations);
+        attachToWindow(target.getContext()); 
         mDropCover.init(locations[0], locations[1]);
-        attachToWindow(target.getContext());
     }
 
     public void update(float x, float y) {
@@ -124,7 +124,7 @@ public class CoverManager {
         Class<?> c = null;
         Object obj = null;
         Field field = null;
-        int x = 0, sbar = 38;// Ä¬ÈÏÎª38£¬Ã²ËÆ´ó²¿·ÖÊÇÕâÑùµÄ
+        int x = 0, sbar = 38;// Ä¬ï¿½ï¿½Îª38ï¿½ï¿½Ã²ï¿½Æ´ó²¿·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         try {
             c = Class.forName("com.android.internal.R$dimen");

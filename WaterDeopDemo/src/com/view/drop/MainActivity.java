@@ -23,8 +23,8 @@ public class MainActivity extends Activity {
         ListView mList = (ListView) findViewById(R.id.list);
         mList.setAdapter(new DemoAdapter());
         
-        CoverManager.getInstance().setMaxDragDistance(100);
-        CoverManager.getInstance().setExplosionTime(300);
+        CoverManager.getInstance().setMaxDragDistance(150);
+        CoverManager.getInstance().setExplosionTime(150);
     }
 
     class DemoAdapter extends BaseAdapter {
