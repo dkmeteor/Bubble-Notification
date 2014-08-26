@@ -15,50 +15,55 @@ import com.dk.view.drop.DropCover.OnDragCompeteListener;
 
 public class MainActivity extends Activity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        getActionBar().hide();
-        CoverManager.getInstance().init(this);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		getActionBar().hide();
+		CoverManager.getInstance().init(this);
 
-        ListView mList = (ListView) findViewById(R.id.list);
-        mList.setAdapter(new DemoAdapter());
-        
-        CoverManager.getInstance().setMaxDragDistance(150);
-        CoverManager.getInstance().setExplosionTime(150);
-    }
+		ListView mList = (ListView) findViewById(R.id.list);
+		mList.setAdapter(new DemoAdapter());
 
-    class DemoAdapter extends BaseAdapter {
+		CoverManager.getInstance().setMaxDragDistance(150);
+		CoverManager.getInstance().setExplosionTime(150);
+	}
 
-        @Override
-        public int getCount() {
-            return 99;
-        }
+	class DemoAdapter extends BaseAdapter {
 
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
+		@Override
+		public int getCount() {
+			return 99;
+		}
 
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
+		@Override
+		public Object getItem(int position) {
+			return null;
+		}
 
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_list_item, null);
-            WaterDrop drop = (WaterDrop) convertView.findViewById(R.id.drop);
-            drop.setOnDragCompeteListener(new OnDragCompeteListener() {
+		@Override
+		public long getItemId(int position) {
+			return 0;
+		}
 
-                @Override
-                public void onDrag() {
-                    Toast.makeText(MainActivity.this, "remove:" + position, Toast.LENGTH_SHORT).show();
-                }
-            });
+		@Override
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
+			convertView = LayoutInflater.from(MainActivity.this).inflate(
+					R.layout.view_list_item, null);
+			WaterDrop drop = (WaterDrop) convertView.findViewById(R.id.drop);
+			drop.setText(String.valueOf(position));
 
-            return convertView;
-        }
-    }
+			drop.setOnDragCompeteListener(new OnDragCompeteListener() {
+
+				@Override
+				public void onDrag() {
+					Toast.makeText(MainActivity.this, "remove:" + position,
+							Toast.LENGTH_SHORT).show();
+				}
+			});
+
+			return convertView;
+		}
+	}
 }
