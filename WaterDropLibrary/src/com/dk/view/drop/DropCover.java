@@ -150,9 +150,10 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 
         clearDatas();
         Canvas canvas = getHolder().lockCanvas();
-        canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);
-        getHolder().unlockCanvasAndPost(canvas);
-
+        if (canvas != null) {
+            canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);
+            getHolder().unlockCanvasAndPost(canvas);
+        }
         if (distance > mMaxDistance) {
             if (mOnDragCompeteListener != null)
                 mOnDragCompeteListener.onDrag();
