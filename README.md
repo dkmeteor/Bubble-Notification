@@ -1,3 +1,4 @@
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Bubble--Notification-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/875)
 
 # Demo
 ![Examples list](http://dk-exp.com/wp-content/uploads/2014/08/WaterDrop.gif)
