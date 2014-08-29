@@ -104,9 +104,6 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
         Point p = new Point(end.x - start.x, end.y - start.y);
 
         float a, b;
-        
-        a*p.x +b*p.y=0;
-        Math.sqrt(a*a+b*b)=mStrokeWidth/2;
 
         return null;
     }
