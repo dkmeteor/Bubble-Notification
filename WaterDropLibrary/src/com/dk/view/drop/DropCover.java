@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff.Mode;
 import android.os.Build.VERSION;
@@ -77,16 +78,37 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawCircle(mBaseX, mBaseY, mStrokeWidth, mPaint);
                 if (distance < mMaxDistance) {
                     mStrokeWidth = (float) ((1 - distance / mMaxDistance) * 25);
-                    mPaint.setStrokeWidth(mStrokeWidth);
                     // TODO t
                     // The line is not smooth.
                     // maybe change it to B锟斤拷zier curve
                     canvas.drawLine(mBaseX, mBaseY, mTargetX + targetWidth / 2, mTargetY + targetHeight / 2, mPaint);
+                    // drawBezier(canvas);
                 }
                 canvas.drawBitmap(mDest, mTargetX, mTargetY, mPaint);
             }
             getHolder().unlockCanvasAndPost(canvas);
         }
+    }
+
+    private void drawBezier(Canvas canvas) {
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(mStrokeWidth / 2);
+
+        Path path2 = new Path();
+        path2.moveTo(mBaseX, mBaseY);// 设置Path的起点
+        path2.quadTo((mBaseX + mTargetX + targetWidth / 2) / 2f, (mBaseY + mTargetY + targetHeight / 2) / 2, mTargetX + targetWidth / 2, mTargetY + targetHeight / 2); // 设置贝塞尔曲线的控制点坐标和终点坐标
+        canvas.drawPath(path2, mPaint);// 画出贝塞尔曲线
+    }
+
+    private Point calculate(Point start, Point end) {
+        Point p = new Point(end.x - start.x, end.y - start.y);
+
+        float a, b;
+        
+        a*p.x +b*p.y=0;
+        Math.sqrt(a*a+b*b)=mStrokeWidth/2;
+
+        return null;
     }
 
     public void setTarget(Bitmap dest) {
@@ -250,5 +272,14 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
      */
     public void setMaxDragDistance(int maxDistance) {
         mMaxDistance = maxDistance;
+    }
+
+    class Point {
+        float x, y;
+
+        public Point(float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
     }
 }
