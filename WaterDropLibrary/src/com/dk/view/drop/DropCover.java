@@ -34,7 +34,7 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 
     private float targetWidth;
     private float targetHeight;
-
+    private float mRadius = 0;
     private float mStrokeWidth = 20;
     private boolean isDraw = true;
     private float mStatusBarHeight = 0;
@@ -57,6 +57,7 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
         if (VERSION.SDK_INT > 11) {
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
+
     }
 
     @Override
@@ -75,14 +76,13 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
             if (isDraw) {
                 double distance = Math.sqrt(Math.pow(mBaseX - mTargetX, 2) + Math.pow(mBaseY - mTargetY, 2));
                 mPaint.setColor(0xffff0000);
-                canvas.drawCircle(mBaseX, mBaseY, mStrokeWidth, mPaint);
                 if (distance < mMaxDistance) {
-                    mStrokeWidth = (float) ((1 - distance / mMaxDistance) * 25);
-                    // TODO t
-                    // The line is not smooth.
-                    // maybe change it to B锟斤拷zier curve
-                    canvas.drawLine(mBaseX, mBaseY, mTargetX + targetWidth / 2, mTargetY + targetHeight / 2, mPaint);
-                    // drawBezier(canvas);
+                    mStrokeWidth = (float) ((1f - distance / mMaxDistance) * mRadius);
+                    mPaint.setStrokeWidth(mStrokeWidth);
+                    canvas.drawCircle(mBaseX, mBaseY, mStrokeWidth / 2, mPaint);
+                    // canvas.drawLine(mBaseX, mBaseY, mTargetX + targetWidth /
+                    // 2, mTargetY + targetHeight / 2, mPaint);
+                    drawBezier(canvas);
                 }
                 canvas.drawBitmap(mDest, mTargetX, mTargetY, mPaint);
             }
@@ -92,31 +92,66 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 
     private void drawBezier(Canvas canvas) {
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(mStrokeWidth / 2);
+
+        Point[] points = calculate(new Point(mBaseX, mBaseY), new Point(mTargetX + mDest.getWidth() / 2f, mTargetY + mDest.getHeight() / 2f));
+
+        float centerX = (points[0].x + points[1].x + points[2].x + points[3].x) / 4f;
+        float centerY = (points[0].y + points[1].y + points[2].y + points[3].y) / 4f;
+
+        Path path1 = new Path();
+        path1.moveTo(points[0].x, points[0].y);
+        path1.quadTo((points[2].x + points[3].x) / 2, (points[2].y + points[3].y) / 2, points[1].x, points[1].y);
+        canvas.drawPath(path1, mPaint);
 
         Path path2 = new Path();
-        path2.moveTo(mBaseX, mBaseY);// 设置Path的起点
-        path2.quadTo((mBaseX + mTargetX + targetWidth / 2) / 2f, (mBaseY + mTargetY + targetHeight / 2) / 2, mTargetX + targetWidth / 2, mTargetY + targetHeight / 2); // 设置贝塞尔曲线的控制点坐标和终点坐标
-        canvas.drawPath(path2, mPaint);// 画出贝塞尔曲线
+        path2.moveTo(points[2].x, points[2].y);
+        path2.quadTo((points[0].x + points[1].x) / 2, (points[0].y + points[1].y) / 2, points[3].x, points[3].y);
+        canvas.drawPath(path2, mPaint);
     }
 
-    private Point calculate(Point start, Point end) {
-        Point p = new Point(end.x - start.x, end.y - start.y);
+    /**
+     * ax=by=0 x^2+y^2=s/2
+     * 
+     * ==>
+     * 
+     * x=a^2/(a^2+b^2)*s/2
+     * 
+     * @param start
+     * @param end
+     * @return
+     */
+    private Point[] calculate(Point start, Point end) {
+        float a = end.x - start.x;
+        float b = end.y - start.y;
 
-        float a, b;
+        float x = (float) Math.sqrt(a * a / (a * a + b * b) * (mStrokeWidth / 2f) * (mStrokeWidth / 2f));
+        float y = -b / a * x;
 
-        return null;
+        System.out.println("x:" + x + " y:" + y);
+
+        Point[] result = new Point[4];
+
+        result[0] = new Point(start.x + x, start.y + y);
+        result[1] = new Point(end.x + x, end.y + y);
+
+        result[2] = new Point(start.x - x, start.y - y);
+        result[3] = new Point(end.x - x, end.y - y);
+
+        return result;
     }
 
     public void setTarget(Bitmap dest) {
         mDest = dest;
         targetWidth = dest.getWidth();
         targetHeight = dest.getHeight();
+
+        mRadius = dest.getWidth() / 2;
+        mStrokeWidth = mRadius;
     }
 
     public void init(float x, float y) {
-        mBaseX = x + mDest.getWidth() / 2;
-        mBaseY = y - mDest.getWidth() / 2;
+        mBaseX = x + mDest.getWidth() / 2f;
+        mBaseY = y - mDest.getWidth() / 2f;
         mTargetX = x;
         mTargetY = y - mStatusBarHeight;
 

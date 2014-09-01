@@ -77,7 +77,8 @@ public class WaterDrop extends RelativeLayout {
         case MotionEvent.ACTION_DOWN:
             mHolderEventFlag = !CoverManager.getInstance().isRunning();
             if (mHolderEventFlag) {
-                parent.requestDisallowInterceptTouchEvent(true);
+                if (parent != null)
+                    parent.requestDisallowInterceptTouchEvent(true);
                 CoverManager.getInstance().start(this, event.getRawX(), event.getRawY(), mOnDragCompeteListener);
             }
             break;
@@ -89,7 +90,8 @@ public class WaterDrop extends RelativeLayout {
         case MotionEvent.ACTION_UP:
         case MotionEvent.ACTION_CANCEL:
             if (mHolderEventFlag) {
-                parent.requestDisallowInterceptTouchEvent(false);
+                if (parent != null)
+                    parent.requestDisallowInterceptTouchEvent(false);
                 CoverManager.getInstance().finish(this, event.getRawX(), event.getRawY());
             }
             break;
@@ -101,7 +103,15 @@ public class WaterDrop extends RelativeLayout {
     private ViewGroup getScrollableParent() {
         View target = this;
         while (true) {
-            View parent = (View) target.getParent();
+            View parent;
+            try {
+                /**
+                 * ViewRootImpl cannot be cast to android.view.View
+                 */
+                parent = (View) target.getParent();
+            } catch (Exception e) {
+                return null;
+            }
             if (parent == null)
                 return null;
             if (parent instanceof ListView || parent instanceof ScrollView) {

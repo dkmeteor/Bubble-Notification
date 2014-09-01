@@ -39,10 +39,10 @@ public class CoverManager {
     }
 
     public void start(View target, float x, float y, DropCover.OnDragCompeteListener onDragCompeteListener) {
-        if (mDropCover != null && mDropCover.getParent() != null) {
-            return;
-        } else {
+        if (mDropCover != null && mDropCover.getParent() == null) {
             mDropCover.setOnDragCompeteListener(onDragCompeteListener);
+        } else {
+            return;
         }
 
         mDest = drawViewToBitmap(target);
@@ -50,18 +50,17 @@ public class CoverManager {
         mDropCover.setTarget(mDest);
         int[] locations = new int[2];
         target.getLocationOnScreen(locations);
-        attachToWindow(target.getContext()); 
+        attachToWindow(target.getContext());
         mDropCover.init(locations[0], locations[1]);
     }
 
     public void update(float x, float y) {
-        System.out.println("x:" + x + " y:" + y);
         mDropCover.update(x, y);
     }
 
     public void finish(View target, float x, float y) {
         mDropCover.finish(target, x, y);
-        mDropCover.setOnDragListener(null);
+        mDropCover.setOnDragCompeteListener(null);
 
     }
 
@@ -108,6 +107,7 @@ public class CoverManager {
      * please call it before animation start
      * 
      * Notice: the unit is frame.
+     * 
      * @param maxDistance
      */
     public void setExplosionTime(int lifeTime) {
@@ -119,7 +119,7 @@ public class CoverManager {
             mDropCover.setMaxDragDistance(maxDistance);
         }
     }
-    
+
     public static int getStatusBarHeight(Activity activity) {
         Class<?> c = null;
         Object obj = null;
