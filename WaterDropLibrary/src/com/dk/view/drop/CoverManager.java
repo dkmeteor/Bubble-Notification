@@ -74,7 +74,7 @@ public class CoverManager {
 				mDropCover.finish(target, x, y);
 				mDropCover.setOnDragCompeteListener(null);
 			}
-		}, 100);
+		}, 30);
 
 	}
 
