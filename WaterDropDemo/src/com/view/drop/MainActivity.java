@@ -49,8 +49,10 @@ public class MainActivity extends Activity {
 		@Override
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
-			convertView = LayoutInflater.from(MainActivity.this).inflate(
-					R.layout.view_list_item, null);
+			if (convertView == null) {
+				convertView = LayoutInflater.from(MainActivity.this).inflate(
+						R.layout.view_list_item, null);
+			}
 			WaterDrop drop = (WaterDrop) convertView.findViewById(R.id.drop);
 			drop.setText(String.valueOf(position));
 
