@@ -17,6 +17,19 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ *
+ * NOTE:
+ *
+ * The origin circle drawn by  canvas.drawCircle(mBaseX, mBaseY, mStrokeWidth / 2, mPaint);
+ *
+ * so mBaseX, mBaseY are center position.
+ *
+ * The Moved circle drawn by  canvas.drawBitmap(mDest, mTargetX, mTargetY, mPaint);
+ *
+ * so mTargetX,mTargetY are left top corner position.
+ *
+ */
 public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 
     private static final int EXPLOSION_SIZE = 200;
@@ -84,8 +97,6 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
                     mStrokeWidth = (float) ((1f - distance / mMaxDistance) * mRadius);
                     mPaint.setStrokeWidth(mStrokeWidth);
                     canvas.drawCircle(mBaseX, mBaseY, mStrokeWidth / 2, mPaint);
-                    // canvas.drawLine(mBaseX, mBaseY, mTargetX + targetWidth /
-                    // 2, mTargetY + targetHeight / 2, mPaint);
                     drawBezier(canvas);
                 }
                 canvas.drawBitmap(mDest, mTargetX, mTargetY, mPaint);
@@ -131,8 +142,6 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
         float x = (float) Math.sqrt(a * a / (a * a + b * b) * (mStrokeWidth / 2f) * (mStrokeWidth / 2f));
         float y = -b / a * x;
 
-        System.out.println("x:" + x + " y:" + y);
-
         Point[] result = new Point[4];
 
         result[0] = new Point(start.x + x, start.y + y);
@@ -153,11 +162,12 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
         mStrokeWidth = mRadius;
     }
 
-    public void init(float x, float y) {
-        mBaseX = x + mDest.getWidth() / 2f;
-        mBaseY = y - mDest.getWidth() / 2f;
-        mTargetX = x;
-        mTargetY = y - mStatusBarHeight;
+    public void init(float baseX, float baseY,float x,float y) {
+        mBaseX = baseX + mDest.getWidth() / 2f;
+        mBaseY = baseY - mDest.getWidth() / 2f + mStatusBarHeight;
+
+        mTargetX = x - mDest.getWidth() / 2f;
+        mTargetY = y - mDest.getWidth() / 2f - mStatusBarHeight;
 
         isDraw = true;
         drawDrop();
@@ -170,8 +180,8 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
      * @param y
      */
     public void update(float x, float y) {
-        mTargetX = x;
-        mTargetY = y - mStatusBarHeight;
+        mTargetX = x - mDest.getWidth() / 2f;
+        mTargetY = y - mDest.getWidth() / 2f - mStatusBarHeight;
         drawDrop();
     }
 
@@ -192,16 +202,6 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
     public void clearViews() {
         if (getParent() != null) {
             CoverManager.getInstance().getWindowManager().removeView(this);
-
-//            post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    ViewGroup decorView = (ViewGroup) ((Activity) getContext()).getWindow().getDecorView();
-//                    decorView.removeView(DropCover.this);
-
-//                    ((ViewGroup)getParent()).removeView(DropCover.this);
-//                }
-//            });
         }
     }
 

@@ -12,7 +12,6 @@ public class BigDemoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_big);
 
-        getActionBar().hide();
         CoverManager.getInstance().init(this);
 
         CoverManager.getInstance().setMaxDragDistance(350);
