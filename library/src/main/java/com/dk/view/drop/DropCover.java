@@ -18,17 +18,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- *
  * NOTE:
- *
+ * <p/>
  * The origin circle drawn by  canvas.drawCircle(mBaseX, mBaseY, mStrokeWidth / 2, mPaint);
- *
+ * <p/>
  * so mBaseX, mBaseY are center position.
- *
+ * <p/>
  * The Moved circle drawn by  canvas.drawBitmap(mDest, mTargetX, mTargetY, mPaint);
- *
+ * <p/>
  * so mTargetX,mTargetY are left top corner position.
- *
  */
 public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -93,9 +91,10 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
             if (isDraw) {
                 double distance = Math.sqrt(Math.pow(mBaseX - mTargetX, 2) + Math.pow(mBaseY - mTargetY, 2));
                 mPaint.setColor(0xffff0000);
+                mPaint.setStyle(Paint.Style.STROKE);
                 if (distance < mMaxDistance) {
                     mStrokeWidth = (float) ((1f - distance / mMaxDistance) * mRadius);
-                    mPaint.setStrokeWidth(mStrokeWidth);
+//                    mPaint.setStrokeWidth(mStrokeWidth);
                     canvas.drawCircle(mBaseX, mBaseY, mStrokeWidth / 2, mPaint);
                     drawBezier(canvas);
                 }
@@ -115,22 +114,26 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 
         Path path1 = new Path();
         path1.moveTo(points[0].x, points[0].y);
-        path1.quadTo((points[2].x + points[3].x) / 2, (points[2].y + points[3].y) / 2, points[1].x, points[1].y);
+//        path1.quadTo((points[2].x + points[3].x) / 2, (points[2].y + points[3].y) / 2, points[1].x, points[1].y);
+
+        path1.quadTo(centerX, centerY, points[1].x, points[1].y);
         canvas.drawPath(path1, mPaint);
 
         Path path2 = new Path();
         path2.moveTo(points[2].x, points[2].y);
-        path2.quadTo((points[0].x + points[1].x) / 2, (points[0].y + points[1].y) / 2, points[3].x, points[3].y);
+//        path2.quadTo((points[0].x + points[1].x) / 2, (points[0].y + points[1].y) / 2, points[3].x, points[3].y);
+
+        path2.quadTo(centerX, centerY, points[3].x, points[3].y);
         canvas.drawPath(path2, mPaint);
     }
 
     /**
      * ax=by=0 x^2+y^2=s/2
-     * 
+     * <p/>
      * ==>
-     * 
+     * <p/>
      * x=a^2/(a^2+b^2)*s/2
-     * 
+     *
      * @param start
      * @param end
      * @return
@@ -139,16 +142,20 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
         float a = end.x - start.x;
         float b = end.y - start.y;
 
-        float x = (float) Math.sqrt(a * a / (a * a + b * b) * (mStrokeWidth / 2f) * (mStrokeWidth / 2f));
-        float y = -b / a * x;
+        float y1 = (float) Math.sqrt(a * a / (a * a + b * b) * (mStrokeWidth / 2f) * (mStrokeWidth / 2f));
+        float x1 = -b / a * y1;
+
+        float y2 = (float) Math.sqrt(a * a / (a * a + b * b) * (targetWidth / 2f) * (targetHeight / 2f));
+        float x2 = -b / a * y2;
+
 
         Point[] result = new Point[4];
 
-        result[0] = new Point(start.x + x, start.y + y);
-        result[1] = new Point(end.x + x, end.y + y);
+        result[0] = new Point(start.x + x1, start.y + y1);
+        result[1] = new Point(end.x + x2, end.y + y2);
 
-        result[2] = new Point(start.x - x, start.y - y);
-        result[3] = new Point(end.x - x, end.y - y);
+        result[2] = new Point(start.x - x1, start.y - y1);
+        result[3] = new Point(end.x - x2, end.y - y2);
 
         return result;
     }
@@ -162,7 +169,7 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
         mStrokeWidth = mRadius;
     }
 
-    public void init(float baseX, float baseY,float x,float y) {
+    public void init(float baseX, float baseY, float x, float y) {
         mBaseX = baseX + mDest.getWidth() / 2f;
         mBaseY = baseY - mDest.getWidth() / 2f + mStatusBarHeight;
 
@@ -175,7 +182,7 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
      * move the drop
-     * 
+     *
      * @param x
      * @param y
      */
@@ -207,7 +214,7 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
      * finish drag event and start explosion
-     * 
+     *
      * @param target
      * @param x
      * @param y
@@ -241,7 +248,6 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
     /**
      * Deprecated
      *
-     *
      * @param statusBarHeight
      */
     public void setStatusBarHeight(int statusBarHeight) {
@@ -271,7 +277,7 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
      * init the explosion whit start position
-     * 
+     *
      * @param x
      * @param y
      */
@@ -283,7 +289,7 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
      * call it to draw explosion
-     * 
+     *
      * @param canvas
      * @return isAlive
      */
@@ -318,7 +324,7 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
      * please call it before animation start
-     * 
+     *
      * @param maxDistance
      */
     public void setMaxDragDistance(int maxDistance) {
