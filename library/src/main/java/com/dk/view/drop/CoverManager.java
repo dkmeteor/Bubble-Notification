@@ -8,15 +8,19 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 public class CoverManager {
 	private static CoverManager mCoverManager;
 	private static Bitmap mDest;
 	private DropCover mDropCover;
 	private WindowManager mWindowManager;
+	private ViewGroup mContainer;
+
 
 	private CoverManager() {
 
@@ -36,7 +40,30 @@ public class CoverManager {
 	public void init(Activity activity) {
 		if (mDropCover == null) {
 			mDropCover = new DropCover(activity);
+			mContainer = new FrameLayout(activity);
+
+			mWindowManager = activity.getWindowManager();
+
+			ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
+			decor.addView(mContainer);
+
+			/**
+			 *
+			 *  WTF!
+			 *
+			 *  http://stackoverflow.com/questions/8772862/surfaceview-flashes-black-on-load
+			 *
+			 */
+			SurfaceView s = new SurfaceView(activity);
+			mContainer.addView(s);
+			mContainer.post(new Runnable() {
+				@Override
+				public void run() {
+					mContainer.removeAllViews();
+				}
+			});
 		}
+
 		mDropCover.setStatusBarHeight(getStatusBarHeight(activity));
 	}
 
@@ -51,7 +78,7 @@ public class CoverManager {
 		mDest = drawViewToBitmap(target);
 		target.setVisibility(View.INVISIBLE);
 		mDropCover.setTarget(mDest);
-		int[] locations = new int[2];
+		final int[] locations = new int[2];
 		target.getLocationOnScreen(locations);
 		attachToWindow(target.getContext());
 		mDropCover.init(locations[0], locations[1]);
@@ -96,14 +123,18 @@ public class CoverManager {
 	}
 
 	private void attachToWindow(Context context) {
-
 		if (mDropCover == null) {
 			mDropCover = new DropCover(context);
 		}
+//		mContainer.addView(mDropCover);
 
-		ViewGroup decor = (ViewGroup) ((Activity)context).getWindow().getDecorView();
-		decor.addView(mDropCover);
-
+		WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+		params.type = WindowManager.LayoutParams.TYPE_APPLICATION;
+		params.height = WindowManager.LayoutParams.MATCH_PARENT;
+		params.width = WindowManager.LayoutParams.MATCH_PARENT;
+		params.format = PixelFormat.RGBA_8888;
+		params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+		mWindowManager.addView(mDropCover, params);
 	}
 
 	public boolean isRunning() {

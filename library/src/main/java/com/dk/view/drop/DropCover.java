@@ -57,10 +57,11 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
         setClickable(false);
         setFocusableInTouchMode(false);
         mPaint.setAntiAlias(true);
+
+
         if (VERSION.SDK_INT > 11) {
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-
     }
 
     @Override
@@ -169,7 +170,6 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
      * @param y
      */
     public void update(float x, float y) {
-
         mTargetX = x;
         mTargetY = y - mStatusBarHeight;
         drawDrop();
@@ -191,15 +191,17 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
      */
     public void clearViews() {
         if (getParent() != null) {
-//            CoverManager.getInstance().getWindowManager().removeView(this);
+            CoverManager.getInstance().getWindowManager().removeView(this);
 
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    ViewGroup decorView = (ViewGroup) ((Activity) getContext()).getWindow().getDecorView();
-                    decorView.removeView(DropCover.this);
-                }
-            });
+//            post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    ViewGroup decorView = (ViewGroup) ((Activity) getContext()).getWindow().getDecorView();
+//                    decorView.removeView(DropCover.this);
+
+//                    ((ViewGroup)getParent()).removeView(DropCover.this);
+//                }
+//            });
         }
     }
 
@@ -236,8 +238,14 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
         isDraw = false;
     }
 
+    /**
+     * Deprecated
+     *
+     *
+     * @param statusBarHeight
+     */
     public void setStatusBarHeight(int statusBarHeight) {
-        mStatusBarHeight = statusBarHeight;
+//        mStatusBarHeight = statusBarHeight;
     }
 
     public void setOnDragCompeteListener(OnDragCompeteListener onDragCompeteListener) {

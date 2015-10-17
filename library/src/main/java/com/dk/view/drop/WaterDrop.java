@@ -59,15 +59,9 @@ public class WaterDrop extends RelativeLayout {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-
         mPaint.setColor(0xffff0000);
         canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2, mPaint);
         super.dispatchDraw(canvas);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
     }
 
     @Override
