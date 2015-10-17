@@ -19,8 +19,6 @@ public class CoverManager {
 	private static Bitmap mDest;
 	private DropCover mDropCover;
 	private WindowManager mWindowManager;
-	private ViewGroup mContainer;
-
 
 	private CoverManager() {
 
@@ -40,33 +38,10 @@ public class CoverManager {
 	public void init(Activity activity) {
 		if (mDropCover == null) {
 			mDropCover = new DropCover(activity);
-			mContainer = new FrameLayout(activity);
-
 			mWindowManager = activity.getWindowManager();
-
-			ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
-			decor.addView(mContainer);
-
-			/**
-			 *
-			 *  WTF!
-			 *
-			 *  http://stackoverflow.com/questions/8772862/surfaceview-flashes-black-on-load
-			 *
-			 */
-			SurfaceView s = new SurfaceView(activity);
-			mContainer.addView(s);
-			mContainer.post(new Runnable() {
-				@Override
-				public void run() {
-					mContainer.removeAllViews();
-				}
-			});
+			mDropCover.setStatusBarHeight(getStatusBarHeight(activity));
 		}
-
-		mDropCover.setStatusBarHeight(getStatusBarHeight(activity));
 	}
-
 	public void start(View target, float x, float y,
 			DropCover.OnDragCompeteListener onDragCompeteListener) {
 		if (mDropCover != null && mDropCover.getParent() == null) {

@@ -245,7 +245,7 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
      * @param statusBarHeight
      */
     public void setStatusBarHeight(int statusBarHeight) {
-//        mStatusBarHeight = statusBarHeight;
+        mStatusBarHeight = statusBarHeight;
     }
 
     public void setOnDragCompeteListener(OnDragCompeteListener onDragCompeteListener) {
