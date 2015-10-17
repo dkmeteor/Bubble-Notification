@@ -91,7 +91,7 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
             if (isDraw) {
                 double distance = Math.sqrt(Math.pow(mBaseX - mTargetX, 2) + Math.pow(mBaseY - mTargetY, 2));
                 mPaint.setColor(0xffff0000);
-                mPaint.setStyle(Paint.Style.STROKE);
+                mPaint.setStyle(Paint.Style.FILL);
                 if (distance < mMaxDistance) {
                     mStrokeWidth = (float) ((1f - distance / mMaxDistance) * mRadius);
 //                    mPaint.setStrokeWidth(mStrokeWidth);
@@ -105,7 +105,7 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void drawBezier(Canvas canvas) {
-        mPaint.setStyle(Paint.Style.STROKE);
+//        mPaint.setStyle(Paint.Style.FILL);
 
         Point[] points = calculate(new Point(mBaseX, mBaseY), new Point(mTargetX + mDest.getWidth() / 2f, mTargetY + mDest.getHeight() / 2f));
 
@@ -117,14 +117,18 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 //        path1.quadTo((points[2].x + points[3].x) / 2, (points[2].y + points[3].y) / 2, points[1].x, points[1].y);
 
         path1.quadTo(centerX, centerY, points[1].x, points[1].y);
-        canvas.drawPath(path1, mPaint);
+        path1.lineTo(points[3].x, points[3].y);
 
-        Path path2 = new Path();
-        path2.moveTo(points[2].x, points[2].y);
+//        canvas.drawPath(path1, mPaint);
+
+//        Path path2 = new Path();
+//        path1.moveTo(points[2].x, points[2].y);
 //        path2.quadTo((points[0].x + points[1].x) / 2, (points[0].y + points[1].y) / 2, points[3].x, points[3].y);
 
-        path2.quadTo(centerX, centerY, points[3].x, points[3].y);
-        canvas.drawPath(path2, mPaint);
+        path1.quadTo(centerX, centerY, points[2].x, points[2].y);
+        path1.lineTo(points[0].x, points[0].y);
+
+        canvas.drawPath(path1, mPaint);
     }
 
     /**
