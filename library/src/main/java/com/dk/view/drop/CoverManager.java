@@ -102,7 +102,6 @@ public class CoverManager {
         if (mDropCover == null) {
             mDropCover = new DropCover(context);
         }
-//		mContainer.addView(mDropCover);
 
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
         params.type = WindowManager.LayoutParams.TYPE_APPLICATION;

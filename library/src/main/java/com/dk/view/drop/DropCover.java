@@ -11,6 +11,7 @@ import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff.Mode;
 import android.os.Build.VERSION;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -18,7 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * NOTE:
+ * NOTE1:
  * <p/>
  * The origin circle drawn by  canvas.drawCircle(mBaseX, mBaseY, mStrokeWidth / 2, mPaint);
  * <p/>
@@ -27,6 +28,17 @@ import android.view.ViewGroup;
  * The Moved circle drawn by  canvas.drawBitmap(mDest, mTargetX, mTargetY, mPaint);
  * <p/>
  * so mTargetX,mTargetY are left top corner position.
+ *
+ *
+ * NOTE2:
+ *
+ * the mBaseX, mBaseY comes from view.getLocationOnScreen()
+ *
+ * It contains StatusBarHeight
+ *
+ * The targetX, targetY comes from event.getRawX() / getRawY() , it doesn't contain StatusBarHeight
+ *
+ *
  */
 public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -175,7 +187,11 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 
     public void init(float baseX, float baseY, float x, float y) {
         mBaseX = baseX + mDest.getWidth() / 2f;
-        mBaseY = baseY - mDest.getWidth() / 2f + mStatusBarHeight;
+//        mBaseY = baseY - mDest.getWidth() / 2f + mStatusBarHeight;
+        mBaseY = baseY + mDest.getHeight() / 2f - mStatusBarHeight;
+
+        Log.e("###","baseY:"+baseY);
+        Log.e("###","mStatusBarHeight:"+mStatusBarHeight);
 
         mTargetX = x - mDest.getWidth() / 2f;
         mTargetY = y - mDest.getWidth() / 2f - mStatusBarHeight;
