@@ -9,30 +9,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="af4dcd1a-34ad-4b61-b126-8e4a3ea9990d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gif/energy_all.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/src/main/res/drawable/explosion1.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gif/explosion_all.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gif/explosion_demo.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gif/list_demo1.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gif/list_demo2.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gif/smoke_all.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gif/smoke_explosion_all.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/src/main/java/com/dk/view/drop/GifUpdateThread.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/src/main/java/com/dk/view/drop/RenderActionInterface.java" />
-      <change type="DELETED" beforePath="C:\Users\DK\Documents\Git\Bubble-Notification\gif\explosion.gif" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\DK\Documents\Git\Bubble-Notification\library\src\main\res\drawable\Explosion.gif" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gif/big.gif" afterPath="$PROJECT_DIR$/gif/big.gif" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Sample/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/Sample/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/src/main/java/com/dk/view/drop/DropCover.java" afterPath="$PROJECT_DIR$/library/src/main/java/com/dk/view/drop/DropCover.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/src/main/java/com/dk/view/drop/Explosion.java" afterPath="$PROJECT_DIR$/library/src/main/java/com/dk/view/drop/Explosion.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/src/main/java/com/dk/view/drop/ExplosionUpdateThread.java" afterPath="$PROJECT_DIR$/library/src/main/java/com/dk/view/drop/ExplosionUpdateThread.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/src/main/java/com/dk/view/drop/GifRender.java" afterPath="$PROJECT_DIR$/library/src/main/java/com/dk/view/drop/GifRender.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Sample/src/main/java/com/dk/view/drop/sample/MainActivity.java" afterPath="$PROJECT_DIR$/Sample/src/main/java/com/dk/view/drop/sample/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Sample/src/main/res/layout/activity_big.xml" afterPath="$PROJECT_DIR$/Sample/src/main/res/layout/activity_big.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="af4dcd1a-34ad-4b61-b126-8e4a3ea9990d" name="Default" comment="" />
     <ignored path="Bubble-Notification.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/build/classes/" />

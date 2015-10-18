@@ -29,16 +29,31 @@ Effect like QQ 5.0 and add an explosion animation.
 			});
 
 
-# TODO
+# TODO / UPDATE
 
-![Examples list](/gif/explosion_all.gif)
 
-![Examples list](/gif/energy_all.gif)
 
-![Examples list](/gif/smoke_all.gif)
+- ~~迁移到Android Studio~~
 
-![Examples list](/gif/smoke_explosion_all.gif)
+- ~~添加Gif效果支持~~
 
+- 添加爆炸效果Gif (1/n)
+
+- 重构代码结构
+
+- 待处理特效 
+
+    ![Examples list](/gif/explosion_all.gif)
+
+    ![Examples list](/gif/energy_all.gif)
+
+    ![Examples list](/gif/smoke_all.gif)
+
+    ![Examples list](/gif/smoke_explosion_all.gif)
+
+    AE渲染, 导出序列帧, 再用PS制作Gif, 过程比较繁琐.没有找到方便的处理脚本 / 工具 / 方法的话,不会制作太多特效, 挑一些有特点的做一下.
+
+- Gif对Alpha支持非常差,渲染出的半透明光晕要么效果几乎没有,要么就是大片白色,未来可能添加 animation-list支持,并直接使用AE导出的序列帧.
 
 
 ## License
