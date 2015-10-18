@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
 			drop.setOnDragCompeteListener(new OnDragCompeteListener() {
 
 				@Override
-				public void onDrag() {
+				public void onDragComplete() {
 					Toast.makeText(MainActivity.this, "remove:" + position,
 							Toast.LENGTH_SHORT).show();
 				}

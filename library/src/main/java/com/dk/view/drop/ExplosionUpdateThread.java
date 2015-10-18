@@ -4,9 +4,9 @@ import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 /**
- * The thead will finish when you called setRunning(false) or Explosion ended.
+ * The thead will finish when you called setRunning(false) or explosion1 ended.
  */
-public class ExplosionUpdateThread extends Thread {
+public class ExplosionUpdateThread extends Thread implements RenderActionInterface {
     private SurfaceHolder mHolder;
     private DropCover mDropCover;
     private boolean isRunning = false;
@@ -16,8 +16,14 @@ public class ExplosionUpdateThread extends Thread {
         mDropCover = dropCover;
     }
 
-    public void setRunning(boolean isRunning) {
-        this.isRunning = isRunning;
+
+    public void actionStart() {
+        isRunning = true;
+        start();
+    }
+
+    public void actionStop() {
+        this.isRunning = false;
     }
 
     @Override
@@ -28,10 +34,11 @@ public class ExplosionUpdateThread extends Thread {
             if (canvas != null) {
                 isAlive = mDropCover.render(canvas);
                 mHolder.unlockCanvasAndPost(canvas);
-                mDropCover.update();
+                mDropCover.updateExplosion();
             }
         }
-
         mDropCover.clearViews();
     }
+
+
 }

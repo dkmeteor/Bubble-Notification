@@ -45,7 +45,7 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
     private static final int EXPLOSION_SIZE = 200;
     private int mMaxDistance = 100;
 
-    private ExplosionUpdateThread mThread;
+    private RenderActionInterface mThread;
     private Explosion mExplosion;
 
     private float mBaseX;
@@ -63,10 +63,14 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
     private float mStrokeWidth = 20;
     private boolean isDraw = true;
     private float mStatusBarHeight = 0;
+
+
+    public GifRender mGifRender;
+
     private OnDragCompeteListener mOnDragCompeteListener;
 
     public interface OnDragCompeteListener {
-        void onDrag();
+        void onDragComplete();
     }
 
     @SuppressLint("NewApi")
@@ -218,8 +222,8 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
     public void clearDatas() {
         mBaseX = -1;
         mBaseY = -1;
-        mTargetX = -1;
-        mTargetY = -1;
+//        mTargetX = -1;
+//        mTargetY = -1;
         mDest = null;
     }
 
@@ -250,13 +254,16 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
         }
         if (distance > mMaxDistance) {
             if (mOnDragCompeteListener != null)
-                mOnDragCompeteListener.onDrag();
+                mOnDragCompeteListener.onDragComplete();
 
-            initExplosion(x, y);
-
+            initExplosion(x, y-mStatusBarHeight);
             mThread = new ExplosionUpdateThread(getHolder(), this);
-            mThread.setRunning(true);
-            mThread.start();
+
+//            initGifRender();
+//            mThread = new GifUpdateThread(getHolder(),this);
+            mThread.actionStart();
+
+
         } else {
             clearViews();
             target.setVisibility(View.VISIBLE);
@@ -290,7 +297,7 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         if (mThread != null) {
-            mThread.setRunning(false);
+            mThread.actionStop();
             mThread = null;
         }
     }
@@ -305,6 +312,10 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
         if (mExplosion == null || mExplosion.getState() == Explosion.STATE_DEAD) {
             mExplosion = new Explosion(EXPLOSION_SIZE, (int) x, (int) y);
         }
+    }
+
+    public void initGifRender(){
+        mGifRender = new GifRender(getContext().getApplicationContext());
     }
 
     /**
@@ -327,10 +338,16 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
     /**
      * update explosion
      */
-    public void update() {
+    public void updateExplosion() {
         // update explosions
         if (mExplosion != null && mExplosion.isAlive()) {
             mExplosion.update(getHolder().getSurfaceFrame());
+        }
+    }
+
+    public void updateGif(Canvas canvas){
+        if(mGifRender!=null ){
+            mGifRender.draw(canvas,mTargetX,mTargetY);
         }
     }
 

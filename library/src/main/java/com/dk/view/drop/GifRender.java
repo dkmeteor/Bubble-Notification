@@ -4,14 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Movie;
+import android.util.DisplayMetrics;
 
 /**
  * Created by DK on 2015/10/17.
- * <p/>
- * <p/>
- * See:
- * <p/>
- * https://github.com/sbakhtiarov/gif-movie-view
  */
 public class GifRender {
     private static final int DEFAULT_MOVIEW_DURATION = 1000;
@@ -19,7 +15,7 @@ public class GifRender {
     private int mMovieResourceId;
     private Movie mMovie;
 
-    private long mMovieStart;
+    public long mMovieStart;
     private int mCurrentAnimationTime = 0;
 
 
@@ -42,16 +38,11 @@ public class GifRender {
             mContext = ((Activity) context).getApplication();
         else
             mContext = context;
-    }
-
-
-    private void setViewAttributes(Context context, int resId) {
-
-        mMovieResourceId = resId;
-
-        if (mMovieResourceId != -1) {
-            mMovie = Movie.decodeStream(context.getResources().openRawResource(mMovieResourceId));
-        }
+        DisplayMetrics dm = new DisplayMetrics();
+        dm = context.getResources().getDisplayMetrics();
+        //temp test
+        setMovieResource(R.drawable.explosion1);
+        measure(80 * dm.density, 80 * dm.density);
     }
 
     public void setMovieResource(int movieResId) {
@@ -87,7 +78,7 @@ public class GifRender {
         return this.mPaused;
     }
 
-    public void measure(int widthMeasureSpec, int heightMeasureSpec) {
+    public void measure(float widthMeasureSpec, float heightMeasureSpec) {
 
         if (mMovie != null) {
             int movieWidth = mMovie.width();
@@ -98,8 +89,9 @@ public class GifRender {
 			 */
             float scaleH = 1f;
 
-            int maximumWidth = widthMeasureSpec;
-            if (movieWidth > maximumWidth) {
+            int maximumWidth = (int) widthMeasureSpec;
+//            if (movieWidth > maximumWidth)
+            {
                 scaleH = (float) movieWidth / (float) maximumWidth;
             }
 
@@ -108,8 +100,9 @@ public class GifRender {
 			 */
             float scaleW = 1f;
 
-            int maximumHeight = heightMeasureSpec;
-            if (movieHeight > maximumHeight) {
+            int maximumHeight = (int) heightMeasureSpec;
+//            if (movieHeight > maximumHeight)
+            {
                 scaleW = (float) movieHeight / (float) maximumHeight;
             }
 
@@ -130,8 +123,10 @@ public class GifRender {
     public void draw(Canvas canvas, float x, float y) {
         if (mMovie != null) {
             if (!mPaused) {
+
                 updateAnimationTime();
                 drawMovieFrame(canvas, x, y);
+
             } else {
                 drawMovieFrame(canvas, x, y);
             }
@@ -143,7 +138,6 @@ public class GifRender {
      */
     private void updateAnimationTime() {
         long now = android.os.SystemClock.uptimeMillis();
-
         if (mMovieStart == 0) {
             mMovieStart = now;
         }
@@ -151,19 +145,22 @@ public class GifRender {
         if (dur == 0) {
             dur = DEFAULT_MOVIEW_DURATION;
         }
-        mCurrentAnimationTime = (int) ((now - mMovieStart) % dur);
+
+        if (now - mMovieStart > dur) {
+            mCurrentAnimationTime = dur;
+        } else {
+            mCurrentAnimationTime = (int) ((now - mMovieStart) % dur);
+        }
     }
 
     /**
      * Draw current GIF frame
      */
     private void drawMovieFrame(Canvas canvas, float x, float y) {
-
         mMovie.setTime(mCurrentAnimationTime);
-
         canvas.save(Canvas.MATRIX_SAVE_FLAG);
         canvas.scale(mScale, mScale);
-        mMovie.draw(canvas, x / mScale, y / mScale);
+        mMovie.draw(canvas, (x - mMeasuredMovieWidth / 2) / mScale, (y - mMeasuredMovieHeight / 2) / mScale);
         canvas.restore();
     }
 

@@ -8,6 +8,6 @@
         android:id="@+id/drop"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:gravity="center_vertical" />
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>

@@ -19,7 +19,6 @@ public class Explosion {
     private int state; // whether it's still active or not
 
     public Explosion(int particleNr, int x, int y) {
-        Log.d(TAG, "Explosion created at " + x + "," + y);
         this.state = STATE_ALIVE;
         this.particles = new Particle[particleNr];
         for (int i = 0; i < this.particles.length; i++) {
