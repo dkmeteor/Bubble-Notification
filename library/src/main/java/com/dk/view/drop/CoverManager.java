@@ -19,6 +19,7 @@ public class CoverManager {
     private static Bitmap mDest;
     private DropCover mDropCover;
     private WindowManager mWindowManager;
+    private int mResourceId = -1;
 
     private CoverManager() {
 
@@ -41,6 +42,10 @@ public class CoverManager {
             mWindowManager = activity.getWindowManager();
             mDropCover.setStatusBarHeight(getStatusBarHeight(activity));
         }
+    }
+
+    public void setEffectResource(int resourceId){
+        mResourceId =resourceId;
     }
 
     public void start(View target, float x, float y,
@@ -76,7 +81,7 @@ public class CoverManager {
 
             @Override
             public void run() {
-                mDropCover.finish(target, x, y);
+                mDropCover.finish(target, x, y , mResourceId);
                 mDropCover.setOnDragCompeteListener(null);
             }
         }, 30);

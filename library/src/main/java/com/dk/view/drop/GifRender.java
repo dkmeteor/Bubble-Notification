@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Movie;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 /**
  * Created by DK on 2015/10/17.
@@ -38,16 +39,16 @@ public class GifRender {
             mContext = ((Activity) context).getApplication();
         else
             mContext = context;
-        DisplayMetrics dm = new DisplayMetrics();
-        dm = context.getResources().getDisplayMetrics();
-        //temp test
-        setMovieResource(R.drawable.explosion1);
-        measure(80 * dm.density, 80 * dm.density);
+
     }
 
     public void setMovieResource(int movieResId) {
         this.mMovieResourceId = movieResId;
         mMovie = Movie.decodeStream(mContext.getResources().openRawResource(mMovieResourceId));
+
+        DisplayMetrics dm = new DisplayMetrics();
+        dm = mContext.getResources().getDisplayMetrics();
+        measure(80 * dm.density, 80 * dm.density);
     }
 
     public void setMovie(Movie movie) {
@@ -123,10 +124,8 @@ public class GifRender {
     public void draw(Canvas canvas, float x, float y) {
         if (mMovie != null) {
             if (!mPaused) {
-
                 updateAnimationTime();
                 drawMovieFrame(canvas, x, y);
-
             } else {
                 drawMovieFrame(canvas, x, y);
             }
@@ -160,6 +159,7 @@ public class GifRender {
         mMovie.setTime(mCurrentAnimationTime);
         canvas.save(Canvas.MATRIX_SAVE_FLAG);
         canvas.scale(mScale, mScale);
+        //calculate x,y after scale
         mMovie.draw(canvas, (x - mMeasuredMovieWidth / 2) / mScale, (y - mMeasuredMovieHeight / 2) / mScale);
         canvas.restore();
     }

@@ -243,7 +243,7 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
      * @param x
      * @param y
      */
-    public void finish(View target, float x, float y) {
+    public void finish(View target, float x, float y , int resourceId) {
         double distance = Math.sqrt(Math.pow(mBaseX - mTargetX, 2) + Math.pow(mBaseY - mTargetY, 2));
 
         clearDatas();
@@ -256,11 +256,13 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
             if (mOnDragCompeteListener != null)
                 mOnDragCompeteListener.onDragComplete();
 
-            initExplosion(x, y-mStatusBarHeight);
-            mThread = new ExplosionUpdateThread(getHolder(), this);
-
-//            initGifRender();
-//            mThread = new GifUpdateThread(getHolder(),this);
+            if(resourceId >0){
+                initGifRender(resourceId);
+                mThread = new GifUpdateThread(getHolder(),this);
+            }else {
+                initExplosion(x, y - mStatusBarHeight);
+                mThread = new ExplosionUpdateThread(getHolder(), this);
+            }
             mThread.actionStart();
 
 
@@ -314,8 +316,9 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    public void initGifRender(){
+    public void initGifRender(int resourceId){
         mGifRender = new GifRender(getContext().getApplicationContext());
+        mGifRender.setMovieResource(resourceId);
     }
 
     /**

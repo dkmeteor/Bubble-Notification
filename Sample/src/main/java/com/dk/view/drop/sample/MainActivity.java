@@ -56,6 +56,7 @@ public class MainActivity extends Activity {
 			WaterDrop drop = (WaterDrop) convertView.findViewById(R.id.drop);
 			drop.setText(String.valueOf(position));
 
+			drop.setEffectResource(R.drawable.explosion1);
 			drop.setOnDragCompeteListener(new OnDragCompeteListener() {
 
 				@Override

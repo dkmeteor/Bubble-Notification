@@ -41,7 +41,15 @@ public class WaterDrop extends RelativeLayout {
         mTextView.setTextSize(size);
     }
 
-    @SuppressLint("NewApi")
+    /**
+     * -1 for origin
+     *
+     * @param resourceId
+     */
+    public void setEffectResource(int resourceId){
+        CoverManager.getInstance().setEffectResource(resourceId);
+    }
+
     private void init() {
         mPaint.setAntiAlias(true);
         if (VERSION.SDK_INT > 11) {
