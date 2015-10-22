@@ -1,5 +1,6 @@
 package com.dk.view.drop;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -10,12 +11,19 @@ import android.view.SurfaceHolder;
  */
 public class GifUpdateThread extends Thread implements RenderActionInterface {
     private SurfaceHolder mHolder;
-    private DropCover mDropCover;
     private boolean isRunning = false;
+    public GifRender mGifRender;
+    private float mTargetX;
+    private float mTargetY;
 
-    public GifUpdateThread(SurfaceHolder holder, DropCover dropCover) {
+    public GifUpdateThread(float x,float y,SurfaceHolder holder,Context context, int resourceId) {
         mHolder = holder;
-        mDropCover = dropCover;
+
+        mTargetX = x;
+        mTargetY = y;
+
+        mGifRender = new GifRender(context);
+        mGifRender.setMovieResource(resourceId);
     }
 
     public void actionStart() {
@@ -26,10 +34,12 @@ public class GifUpdateThread extends Thread implements RenderActionInterface {
     public void actionStop() {
         this.isRunning = false;
     }
+
     @Override
     public void run() {
         boolean isAlive = true;
-        long start =System.nanoTime();
+        long start = System.nanoTime();
+        CoverManager coverManager = CoverManager.getInstance();
         while (isRunning && isAlive) {
             Canvas canvas = mHolder.lockCanvas();
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
@@ -38,15 +48,14 @@ public class GifUpdateThread extends Thread implements RenderActionInterface {
                 long now = android.os.SystemClock.uptimeMillis();
 
                 //TODO
-                //Refactor: GifRender move to here.
 
-                if ( mDropCover.mGifRender.mMovieStart != 0 && now - mDropCover.mGifRender.mMovieStart > mDropCover.mGifRender.getMovie().duration()) {
+                if (mGifRender.mMovieStart != 0 && now - mGifRender.mMovieStart > mGifRender.getMovie().duration()) {
                     actionStop();
                 }
-                mDropCover.updateGif(canvas);
+                mGifRender.draw(canvas, mTargetX, mTargetY);
                 mHolder.unlockCanvasAndPost(canvas);
             }
         }
-        mDropCover.clearViews();
+        coverManager.removeViews();
     }
 }

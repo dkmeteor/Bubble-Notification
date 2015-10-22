@@ -15,7 +15,7 @@ public class BigDemoActivity extends Activity {
         CoverManager.getInstance().init(this);
 
         CoverManager.getInstance().setMaxDragDistance(350);
-        CoverManager.getInstance().setExplosionTime(150);
+        CoverManager.getInstance().setEffectDuration(150);
     }
 
 }

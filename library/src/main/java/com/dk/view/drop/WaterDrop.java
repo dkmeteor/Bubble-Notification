@@ -1,13 +1,11 @@
 package com.dk.view.drop;
 
-import com.dk.view.drop.DropCover.OnDragCompeteListener;
+import com.dk.view.drop.CoverManager.OnDragCompeteListener;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -94,7 +92,7 @@ public class WaterDrop extends RelativeLayout {
             if (mHolderEventFlag) {
                 if (parent != null)
                     parent.requestDisallowInterceptTouchEvent(false);
-                CoverManager.getInstance().finish(this, event.getRawX(), event.getRawY());
+                CoverManager.getInstance().finishDrag(this, event.getRawX(), event.getRawY());
             }
             break;
         }

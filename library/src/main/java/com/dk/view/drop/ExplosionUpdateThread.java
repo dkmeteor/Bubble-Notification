@@ -8,12 +8,10 @@ import android.view.SurfaceHolder;
  */
 public class ExplosionUpdateThread extends Thread implements RenderActionInterface {
     private SurfaceHolder mHolder;
-    private DropCover mDropCover;
     private boolean isRunning = false;
 
     public ExplosionUpdateThread(SurfaceHolder holder, DropCover dropCover) {
         mHolder = holder;
-        mDropCover = dropCover;
     }
 
 
@@ -32,12 +30,12 @@ public class ExplosionUpdateThread extends Thread implements RenderActionInterfa
         while (isRunning && isAlive) {
             Canvas canvas = mHolder.lockCanvas();
             if (canvas != null) {
-                isAlive = mDropCover.render(canvas);
+                isAlive = CoverManager.getInstance().render(canvas);
                 mHolder.unlockCanvasAndPost(canvas);
-                mDropCover.updateExplosion();
+                CoverManager.getInstance().updateExplosion();
             }
         }
-        mDropCover.clearViews();
+        CoverManager.getInstance().removeViews();
     }
 
 

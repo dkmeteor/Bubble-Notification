@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.dk.view.drop.CoverManager;
 import com.dk.view.drop.WaterDrop;
-import com.dk.view.drop.DropCover.OnDragCompeteListener;
+import com.dk.view.drop.CoverManager.OnDragCompeteListener;
 
 public class MainActivity extends Activity {
 
@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
 		mList.setAdapter(new DemoAdapter());
 
 		CoverManager.getInstance().setMaxDragDistance(250);
-		CoverManager.getInstance().setExplosionTime(150);
+		CoverManager.getInstance().setEffectDuration(150);
 
 	}
 
