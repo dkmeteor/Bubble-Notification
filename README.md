@@ -6,6 +6,7 @@
 
 ![Examples list](/gif/list_demo2.gif)
 
+![Examples list](/gif/heart.gif)
 
 Effect like QQ 5.0 and add an explosion animation.
 
@@ -37,9 +38,11 @@ Effect like QQ 5.0 and add an explosion animation.
 
 - ~~添加Gif效果支持~~
 
-- 添加爆炸效果Gif (1/n)
+- 添加爆炸效果Gif (3/n)
 
-- 重构代码结构
+- ~~重构代码结构~~
+
+- 提交Jcenter
 
 - 待处理特效 
 
