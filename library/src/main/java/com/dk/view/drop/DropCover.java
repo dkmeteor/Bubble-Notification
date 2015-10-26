@@ -118,20 +118,11 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
 
         Path path1 = new Path();
         path1.moveTo(points[0].x, points[0].y);
-//        path1.quadTo((points[2].x + points[3].x) / 2, (points[2].y + points[3].y) / 2, points[1].x, points[1].y);
-
         path1.quadTo(centerX, centerY, points[1].x, points[1].y);
         path1.lineTo(points[3].x, points[3].y);
 
-//        canvas.drawPath(path1, mPaint);
-
-//        Path path2 = new Path();
-//        path1.moveTo(points[2].x, points[2].y);
-//        path2.quadTo((points[0].x + points[1].x) / 2, (points[0].y + points[1].y) / 2, points[3].x, points[3].y);
-
         path1.quadTo(centerX, centerY, points[2].x, points[2].y);
         path1.lineTo(points[0].x, points[0].y);
-
         canvas.drawPath(path1, mPaint);
     }
 
@@ -181,9 +172,6 @@ public class DropCover extends SurfaceView implements SurfaceHolder.Callback {
         mBaseX = baseX + mDest.getWidth() / 2f;
 //        mBaseY = baseY - mDest.getWidth() / 2f + mStatusBarHeight;
         mBaseY = baseY + mDest.getHeight() / 2f - mStatusBarHeight;
-
-        Log.e("###","baseY:"+baseY);
-        Log.e("###","mStatusBarHeight:"+mStatusBarHeight);
 
         mTargetX = x - mDest.getWidth() / 2f;
         mTargetY = y - mDest.getWidth() / 2f - mStatusBarHeight;

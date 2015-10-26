@@ -48,7 +48,7 @@ public class GifRender {
 
         DisplayMetrics dm = new DisplayMetrics();
         dm = mContext.getResources().getDisplayMetrics();
-        measure(80 * dm.density, 80 * dm.density);
+        measure(60  * dm.density, 60 * dm.density);
     }
 
     public void setMovie(Movie movie) {

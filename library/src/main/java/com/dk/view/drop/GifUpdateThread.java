@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 /**
@@ -19,11 +20,12 @@ public class GifUpdateThread extends Thread implements RenderActionInterface {
     public GifUpdateThread(float x,float y,SurfaceHolder holder,Context context, int resourceId) {
         mHolder = holder;
 
+        mGifRender = new GifRender(context);
+        mGifRender.setMovieResource(resourceId);
+
         mTargetX = x;
         mTargetY = y;
 
-        mGifRender = new GifRender(context);
-        mGifRender.setMovieResource(resourceId);
     }
 
     public void actionStart() {

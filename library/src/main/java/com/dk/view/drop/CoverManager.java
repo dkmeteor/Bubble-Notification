@@ -57,6 +57,7 @@ public class CoverManager {
             mDropCover = new DropCover(activity);
             mWindowManager = activity.getWindowManager();
             mDropCover.setStatusBarHeight(getStatusBarHeight(activity));
+            getStatusBarHeight(activity);
         }
     }
 
@@ -149,7 +150,9 @@ public class CoverManager {
                 mOnDragCompeteListener.onDragComplete();
 
             if (mResourceId > 0) {
-                mThread = new GifUpdateThread(mDropCover.getTargetX(),mDropCover.getTargetY(),mDropCover.getHolder(), mDropCover.getContext().getApplicationContext(),mResourceId);
+//                mThread = new GifUpdateThread(mDropCover.getTargetX(),mDropCover.getTargetY(),mDropCover.getHolder(), mDropCover.getContext().getApplicationContext(),mResourceId);
+
+                mThread = new GifUpdateThread(x, y - mStatusBarHeight,mDropCover.getHolder(), mDropCover.getContext().getApplicationContext(),mResourceId);
             } else {
                 initExplosion(x, y - mStatusBarHeight);
                 mThread = new ExplosionUpdateThread(mDropCover.getHolder(), mDropCover);
@@ -237,7 +240,6 @@ public class CoverManager {
     public int getStatusBarHeight(Activity activity) {
 
         if (mStatusBarHeight == 0) {
-
             Class<?> c = null;
             Object obj = null;
             Field field = null;
@@ -251,6 +253,7 @@ public class CoverManager {
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
+            mStatusBarHeight = sbar;
             return sbar;
         } else {
             return mStatusBarHeight;
